@@ -1,0 +1,355 @@
+--ALTER TABLE Livrari
+--DROP CONSTRAINT furnizori_livrari_fk;
+--ALTER TABLE Livrari
+--DROP CONSTRAINT componente_livrari_fk;
+--ALTER TABLE Livrari
+--DROP CONSTRAINT proiecte_livrari_fk;
+--ALTER TABLE Furnizori
+--DROP CONSTRAINT furnizori_pk;
+--ALTER TABLE Componente
+--DROP CONSTRAINT componente_pk;
+--ALTER TABLE Proiecte
+--DROP CONSTRAINT proiecte_pk;
+--ALTER TABLE Livrari
+--DROP CONSTRAINT livrari_pk; 
+
+--DROP TABLE Furnizori;
+--DROP TABLE Componente;
+--DROP TABLE Proiecte;
+--DROP TABLE Livrari;
+
+-- 1.a.
+
+CREATE TABLE Furnizori (
+    idf VARCHAR2(10),
+    numef VARCHAR2(50),
+    stare NUMBER(5, 0),
+    oras VARCHAR2(50),
+    CONSTRAINT furnizori_ck CHECK (idf LIKE 'F_%')
+);
+
+-- 1.b.
+                       
+CREATE TABLE Componente (
+    idc VARCHAR2(10),
+    numec VARCHAR2(50),
+    culoare VARCHAR2(20),
+    masa NUMBER(10, 4),
+    oras VARCHAR2(50),
+    CONSTRAINT componente_ck CHECK (idc LIKE 'C_%')
+);
+
+-- 1.c.
+
+CREATE TABLE Proiecte (
+    idp VARCHAR2(10),
+    numep VARCHAR2(50),
+    oras VARCHAR2(50),
+    CONSTRAINT proiecte_ck CHECK (idp LIKE 'P_%')
+);
+
+-- 1.d.
+
+CREATE TABLE Livrari (
+    idf VARCHAR2(10),
+    idc VARCHAR2(10),
+    idp VARCHAR2(10),
+    cantitate NUMBER(10)
+);
+
+-- 1.e.
+
+ALTER TABLE Furnizori
+ADD CONSTRAINT furnizori_pk PRIMARY KEY (idf);
+ALTER TABLE Componente
+ADD CONSTRAINT componente_pk PRIMARY KEY (idc);
+ALTER TABLE Proiecte
+ADD CONSTRAINT proiecte_pk PRIMARY KEY (idp);
+ALTER TABLE Livrari
+ADD CONSTRAINT livrari_pk PRIMARY KEY (idf, idc, idp);
+ALTER TABLE Livrari
+ADD CONSTRAINT furnizori_livrari_fk FOREIGN KEY (idf) REFERENCES Furnizori (idf);
+ALTER TABLE Livrari
+ADD CONSTRAINT componente_livrari_fk FOREIGN KEY (idc) REFERENCES Componente (idc);
+ALTER TABLE Livrari
+ADD CONSTRAINT proiecte_livrari_fk FOREIGN KEY (idp) REFERENCES Proiecte (idp);
+
+-- 1.f.
+
+ALTER TABLE Livrari
+ADD um VARCHAR2(30);
+
+-- 2.a.
+
+ALTER TABLE Livrari
+ADD CONSTRAINT livrari_ck CHECK (um IN ('buc', 'kg', 'm'));
+
+-- 2.b.
+
+ALTER TABLE Componente
+ADD CONSTRAINT c_culoare_nume_ck CHECK 
+(LOWER(culoare) <> 'verde' OR (LOWER(culoare) = 'verde' AND LOWER(numec) LIKE '%bio%'));
+
+-- Inserare de date in tabele
+
+INSERT INTO Furnizori
+VALUES ('F1', 'CARREFOUR ROMANIA SA', 1, 'Bucuresti');
+INSERT INTO Furnizori
+VALUES ('F47', 'ENGIE ROMANIA', 0, 'Cluj-Napoca');
+INSERT INTO Furnizori
+VALUES ('F3', 'BCR LEASING IFN SA', 5, 'Piatra Neamt');
+INSERT INTO Furnizori
+VALUES ('F93', 'NORD GAZ SRL', 3, 'Sighetu Marmatiei');
+INSERT INTO Furnizori
+VALUES ('F178', 'PORSCHE BANK ROMANIA S.A.', 1, 'Brasov');
+INSERT INTO Furnizori
+VALUES ('F746', 'UNIQA ASIGURARI SA', 5, 'Brasov');
+INSERT INTO Furnizori
+VALUES ('F68', 'PAYPOINT SERVICES SRL', 4, 'Cluj-Napoca');
+INSERT INTO Furnizori
+VALUES ('F842', 'Garanti Bank SA', 2, 'Iasi');
+INSERT INTO Furnizori
+VALUES ('F71', 'VIVA CREDIT IFN SA', 1, 'Brasov');
+INSERT INTO Furnizori
+VALUES ('F288', 'LUMINA INSTITUTII DE INVATAMANT SA', 5, 'Cluj-Napoca');
+INSERT INTO Furnizori
+VALUES ('F92', 'APA SERV SA', 5, 'Cluj-Napoca');
+
+INSERT INTO Componente
+VALUES ('C1', 'Varza Bio', 'Verde', 135, 'Brasov');
+INSERT INTO Componente
+VALUES ('C73', 'Card', 'Galben', 10, 'Suceava');
+INSERT INTO Componente
+VALUES ('C936', 'Suruburi', 'Negru', 240, 'Constanta');
+INSERT INTO Componente
+VALUES ('C7', 'Hartie', 'Alb', 0.2, 'Alba Iulia');
+INSERT INTO Componente
+VALUES ('C63', 'Suc Bio', 'Verde', 500, 'Alba Iulia');
+INSERT INTO Componente
+VALUES ('C84', 'Bec', 'Alb', 30, 'Piatra Neamt');
+INSERT INTO Componente
+VALUES ('C94', 'Bec', 'Alb', 20, 'Piatra Neamt');
+INSERT INTO Componente
+VALUES ('C4', 'Rosii', 'Rosu', 25, 'Cluj-Napoca');
+INSERT INTO Componente
+VALUES ('C92', 'Portocale', 'Portocaliu', 40, 'Cluj-Napoca');
+INSERT INTO Componente
+VALUES ('C400', 'Mere', 'Galben', 30, 'Cluj-Napoca');
+
+
+INSERT INTO Proiecte
+VALUES ('P2', 'O Cana De Fericire', 'Piatra Neamt');
+INSERT INTO Proiecte
+VALUES ('P73', 'Ajutorul Pensionarilor', 'Iasi');
+INSERT INTO Proiecte
+VALUES ('P024', 'Ziua Copilului', 'Cluj-Napoca');
+INSERT INTO Proiecte
+VALUES ('P92', 'Mancarea Tuturor', 'Sighetu Marmatiei');
+INSERT INTO Proiecte
+VALUES ('P837', 'Prima Masina', 'Timisoara');
+INSERT INTO Proiecte
+VALUES ('P6', 'Asambleaza Singur', 'Cluj-Napoca');
+INSERT INTO Proiecte
+VALUES ('P657', 'Targul De Craciun', 'Timisoara');
+INSERT INTO Proiecte
+VALUES ('P0', 'Plateste Mai Usor', 'Arad');
+INSERT INTO Proiecte
+VALUES ('P001', 'Ajuta O Viata', 'Cluj-Napoca');
+
+INSERT INTO Livrari
+VALUES ('F746', 'C7', 'P73', 1000, 'buc');
+INSERT INTO Livrari
+VALUES ('F1', 'C1', 'P92', 190, 'kg');
+INSERT INTO Livrari
+VALUES ('F47', 'C84', 'P657', 8500, 'buc');
+INSERT INTO Livrari
+VALUES ('F178', 'C936', 'P6', 90200, 'buc');
+INSERT INTO Livrari
+VALUES ('F1', 'C63', 'P2', 5800, 'kg');
+INSERT INTO Livrari
+VALUES ('F842', 'C73', 'P73', 150, 'm');
+INSERT INTO Livrari
+VALUES ('F71', 'C73', 'P0', 300, 'm');
+INSERT INTO Livrari
+VALUES ('F178', 'C7', 'P837', 3000, 'buc');
+INSERT INTO Livrari
+VALUES ('F3', 'C84', 'P2', 610, 'buc');
+INSERT INTO Livrari
+VALUES ('F178', 'C7', 'P6', 3000, 'buc');
+INSERT INTO Livrari
+VALUES ('F178', 'C7', 'P657', 3000, 'buc');
+INSERT INTO Livrari
+VALUES ('F1', 'C92', 'P2', 1000, 'buc');
+INSERT INTO Livrari
+VALUES ('F1', 'C4', 'P2', 1200, 'buc');
+INSERT INTO Livrari
+VALUES ('F47', 'C4', 'P2', 1000, 'buc');
+INSERT INTO Livrari
+VALUES ('F47', 'C1', 'P657', 600, 'm');
+INSERT INTO Livrari
+VALUES ('F1', 'C1', 'P657', 300, 'kg');
+INSERT INTO Livrari
+VALUES ('F178', 'C1', 'P001', 400, 'kg');
+INSERT INTO Livrari
+VALUES ('F842', 'C1', 'P001', 600, 'buc');
+INSERT INTO Livrari
+VALUES ('F842', 'C1', 'P2', 1400, 'm');
+
+--3.a.
+
+SELECT *
+FROM Furnizori
+WHERE oras = 'Cluj-Napoca'
+ORDER BY stare DESC, numef;
+
+--3.b.
+
+SELECT *
+FROM Componente
+WHERE LOWER(culoare) IN ('alb', 'negru', 'galben')
+ORDER BY culoare, numec, masa;
+
+--4.a.
+
+SELECT Furnizori.numef AS "Furnizori", Proiecte.numep AS "Proiecte", Componente.numec AS "Componente", Furnizori.oras AS "Oras"
+FROM Furnizori JOIN Componente ON (Furnizori.oras = Componente.oras) JOIN Proiecte ON (Furnizori.oras = Proiecte.oras);
+
+--4.b.
+
+SELECT DISTINCT L1.idp, L2.idp
+FROM Livrari L1 JOIN Livrari L2 ON (L1.idf = L2.idf 
+AND L1.idc = L2.idc
+AND L1.cantitate = L2.cantitate
+AND L1.um = L2.um
+AND L1.idp < L2.idp);
+
+--5.a.
+
+SELECT numec
+FROM Componente
+WHERE oras = 'Cluj-Napoca' AND idc IN (SELECT idc
+FROM Livrari
+WHERE cantitate <= ALL (SELECT cantitate
+FROM Livrari
+WHERE idp IN (SELECT idp
+FROM Proiecte
+WHERE oras = 'Piatra Neamt') AND idc IN (SELECT idc
+FROM Componente
+WHERE oras = 'Cluj-Napoca')));
+
+--5.b.
+
+SELECT numec
+FROM Componente
+WHERE oras IN (SELECT oras
+FROM Proiecte
+WHERE idp = 'P001');
+
+--6.a.
+
+SELECT Proiecte.numep AS "proiect", Componente.numec AS "piesa", Livrari.um AS "um", SUM(Livrari.cantitate) AS "cantitate_totala"
+FROM Livrari INNER JOIN Proiecte ON (Livrari.idp = Proiecte.idp) INNER JOIN Componente ON (Livrari.idc = Componente.idc)
+GROUP BY Proiecte.numep, Componente.numec, Livrari.um
+ORDER BY Proiecte.numep;
+
+--6.b.
+
+SELECT um AS "um", MIN(cantitate) AS "minim", AVG(cantitate) AS "mediu", MAX(cantitate) AS "maxim"
+FROM Livrari
+WHERE idc = 'C1'
+GROUP BY um;
+
+--7.a.
+
+INSERT INTO Furnizori
+VALUES ('F123', 'Prim', 0, 'Sibiu');
+INSERT INTO Componente
+VALUES ('C213', 'Satin', 'Albastru', 300, 'Oradea');
+INSERT INTO Proiecte
+VALUES ('P312', 'Ia O Haina', 'Pitesti');
+INSERT INTO Livrari
+VALUES ('F123', 'C213', 'P312', 5, 'buc');
+
+--7.b.
+
+DELETE
+FROM Componente
+WHERE NOT EXISTS (SELECT NULL
+FROM Livrari
+WHERE Livrari.idc = Componente.idc);
+
+--7.c.
+
+UPDATE Furnizori
+SET stare = stare + 2
+WHERE numef LIKE '%S.A.%';
+
+--8.a.
+
+CREATE OR REPLACE TRIGGER Modificare_Stare
+AFTER INSERT
+ON Livrari
+FOR EACH ROW
+BEGIN
+IF (:new.cantitate > 100 AND :new.um = 'buc') THEN
+UPDATE Furnizori
+SET stare = 1
+WHERE stare = 0 AND idf = :new.idf;
+END IF;
+END;
+
+INSERT INTO Livrari
+VALUES ('F47', 'C4', 'P837', 350, 'buc');
+
+--8.b.
+
+CREATE OR REPLACE TRIGGER Impiedica_Modificare_Oras
+BEFORE UPDATE OF oras
+ON Furnizori
+FOR EACH ROW
+DECLARE
+e_update EXCEPTION;
+v_modificare NUMBER(2) := 0;	
+BEGIN	
+SELECT COUNT(*)
+INTO v_modificare
+FROM Livrari JOIN Proiecte ON Proiecte.idp = Livrari.idp JOIN Furnizori ON Furnizori.idf = Livrari.idf JOIN Componente ON Componente.idc = Livrari.idc
+WHERE Furnizori.oras = Componente.oras AND Furnizori.oras = Proiecte.oras;	
+IF (v_modificare > 0) THEN 	
+RAISE e_update;
+END IF;
+EXCEPTION
+WHEN e_update THEN
+DBMS_OUTPUT.PUT_LINE('CAN NOT MODIFY');
+END;
+
+INSERT INTO Livrari
+VALUES ('F68', 'C4', 'P001', 450, 'buc');
+
+UPDATE Furnizori
+SET oras = 'Aiud'
+WHERE idf = 'F68';
+
+--8.c.
+
+CREATE OR REPLACE VIEW LivrareNoua AS
+SELECT f.idf, numef, c.idc, numec, culoare, masa, p.idp, numep, cantitate, um
+FROM Furnizori F, Componente C, Proiecte P, Livrari L
+WHERE F.idf = L.idf AND C.idc = L.idc AND P.idp = L.idp;
+
+CREATE OR REPLACE TRIGGER Permite_Adaugare
+INSTEAD OF INSERT ON LivrareNoua
+FOR EACH ROW 
+BEGIN 
+INSERT INTO Furnizori (idf, numef)
+VALUES (:new.idf, :new.numef);
+INSERT INTO Componente (idc, numec, culoare, masa)
+VALUES (:new.idc, :new.numec, :new.culoare, :new.masa);
+INSERT INTO Proiecte (idp, numep)
+VALUES (:new.idp, :new.numep);
+INSERT INTO Livrari (cantitate, um)
+VALUES (:new.cantitate, :new.um);
+END;
+
+INSERT INTO LivrareNoua
+VALUES ('F777', 'Kaufland Romania SA', 'C777', 'Mazare Bio', 'Verde', 250, 'P777', 'Mananca Sanatos', 120, 'kg');
